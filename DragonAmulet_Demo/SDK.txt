@@ -1,0 +1,110 @@
+﻿// Описание локаций (_locationinfo)
+string id							- Идентификатор вида <loc.*>
+string title						- Название локации
+string description					- Описание локации
+bool guard							- Флаг охраняемости территории
+Dictionary<string, string> ways		- Список дорог с локации в виде <locId, title>
+
+// Описание основных предметов игры (_item)
+string id							- Идентификатор вида <item.*>
+string title						- Название предмета
+int count							- Количество предметов
+int cost							- Стоимость одного предмета
+
+// Описание еды (_food)
+string id							- Идентификатор вида <item.food.*> или <item.bottle.*>
+string title						- Название предмета
+int count							- Количество предметов
+int cost							- Стоимость одного предмета
+int life							- Количество восстанавливаемых жизней
+int mana							- Количество восстанавливаемой маны
+
+// Описание брони (_armor)
+string id							- Идентификатор вида <item.armor.*>
+string title						- Название предмета
+int count							- Количество предметов
+int cost							- Стоимость одного предмета
+int armor							- Единицы защиты предмета
+
+// Описание оружия (_weapon)
+string id							- Идентификатор вида <item.weapon.*>
+string title						- Название предмета
+int count							- Количество предметов
+int cost							- Стоимость одного предмета
+int damage_min						- Минимальный урон
+int damage_max						- Максимальный урон
+int str								- Требуемый навык силы
+int speed							- Скорость атаки
+string weaponby						- Строка-склонение - Чем ударили?
+string need_id						- [только для <item.weapon.ranged.*>] Идентификатор требуемого предмета для атаки
+string needtitle					- [только для <item.weapon.ranged.*>] Название требуемого предмета для атаки
+
+// Описание записок (_note)
+string id							- Идентификатор вида <item.note.*>
+string title						- Название предмета
+int count							- Количество предметов
+int cost							- Стоимость одного предмета
+string desc							- Текст записки
+
+// Описание магии (_magic)
+string id							- Идентификатор вида <loc.*>
+string title						- Название магии
+int mana							- Стоимость магии в единицах маны
+int level							- Требуемый уровень магии
+string say							- Фраза при кастовании
+int damage_min						- Минимальный урон
+int damage_max						- Максимальный урон
+bool needtarget						- Флаг требования цели
+bool onlycrim						- Флаг криминала
+int speed							- Скорость атаки
+List<__magicneeds> need				- Информация о требуемых предметах для атаки
+
+// Описание тредуемого для магии предмета (__magicneeds)
+string need_id						- Идентификатор требуемого предмета вида <item.*>
+string title						- Название требуемого предмета
+int count							- Требуемое количество предметов
+
+
+
+
+
+
+skills["str"]			//0
+skills["dex"]			//1
+skills["int"]			//2
+skills["level"]			//3
+skills["points"]		//4
+skills["meditation"]	//5
+skills["steal"]			//6
+skills["animaltaming"]	//7
+skills["hand"]			//8
+skills["coldweapon"]	//9
+skills["ranged"]		//10
+skills["parring"]		//11
+skills["uklon"]			//12
+skills["magic"]			//13
+skills["magic_resist"]	//14
+skills["magic_uklon"]	//15
+skills["regeneration"]	//16
+skills["hiding"]		//17
+skills["look"]			//18
+skills["steallook"]		//19
+skills["animallore"]	//20
+skills["spirit"]		//21
+
+war["hit"]				//0
+war["damage_min"]		//1
+war["damage_max"]		//2
+war["speed"]			//3
+war["ranged"]			//4
+war["armor"]			//5
+war["uklon"]			//6
+war["parring"]			//7
+war["shield"]			//8
+war["magic_uklon"]		//9
+war["magic_parring"]	//10
+war["magic_shield"]		//11
+war["weaponby"]			//12
+war["exp"]				//13
+war["need"]				//14
+war["needtitle"]		//15

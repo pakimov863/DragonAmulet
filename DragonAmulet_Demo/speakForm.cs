@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace DragonAmulet_Demo
 {
-    public partial class dialogForm : Form
+    public partial class speakForm : Form
     {
         // Переменные
         private _entity person1;
@@ -26,7 +26,7 @@ namespace DragonAmulet_Demo
         private Random rnd = new Random();
 
         #region Конструкторы
-        public dialogForm()
+        public speakForm()
         {
             InitializeComponent();
         }
@@ -37,31 +37,34 @@ namespace DragonAmulet_Demo
         /// <param name="pers1">Игрок-отправитель</param>
         /// <param name="pers2">Персонаж-приемник</param>
         /// <param name="replies">Реплики персонажа</param>
-        public dialogForm(ref _player pers1, ref _npc pers2, Dictionary<string, _dialoginfo> replies)
+        public speakForm(ref _player pers1, ref _npc pers2, Dictionary<string, _dialoginfo> replies)
         {
             this.iserror = false;
-            if (pers2.owner == pers1.id)
+            if (pers1 == null || pers2 == null)
+            { MessageBox.Show("Нет данных для разговора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Asterisk); this.iserror = true; return; }
+            if (pers2.owner == pers1.id && replies == null)
             {
-                this.npcreplies.Add("begin", new _dialoginfo("[Диалог с вашим животным]"));
-                this.npcreplies["begin"].replies.Add("battle", "Насчет боя...");
-                this.npcreplies["begin"].replies.Add("move", "Насчет движения...");
-                this.npcreplies["begin"].replies.Add("lask", "Приласкать");
-                this.npcreplies["begin"].replies.Add("info", "Состояние");
-                this.npcreplies["begin"].replies.Add("end", "Закончить диалог");
-                this.npcreplies.Add("battle",new _dialoginfo("[Параметры боя]"));
-                this.npcreplies["battle"].replies.Add("guardme", "Защищай меня");
-                this.npcreplies["battle"].replies.Add("nelez", "Не лезь в драку");
-                this.npcreplies["battle"].replies.Add("attacklist", "Атакуй...");
-                this.npcreplies["battle"].replies.Add("guardlist", "Защищай...");
-                this.npcreplies["battle"].replies.Add("begin", "Назад");
-                this.npcreplies.Add("move",new _dialoginfo("[Параметры движения]"));
-                this.npcreplies["move"].replies.Add("move", "Следуй за мной");
-                this.npcreplies["move"].replies.Add("stay", "Стой здесь");
-                this.npcreplies["move"].replies.Add("followlist", "Следуй за...");
-                this.npcreplies["move"].replies.Add("begin", "Назад");
-                this.npcreplies.Add("end", new _dialoginfo("[Диалог завершен]"));
+                replies = new Dictionary<string, _dialoginfo>();
+                replies.Add("begin", new _dialoginfo("[Диалог с вашим животным]"));
+                replies["begin"].replies.Add("battle", "Насчет боя...");
+                replies["begin"].replies.Add("move", "Насчет движения...");
+                replies["begin"].replies.Add("lask", "Приласкать");
+                replies["begin"].replies.Add("info", "Состояние");
+                replies["begin"].replies.Add("end", "Закончить диалог");
+                replies.Add("battle", new _dialoginfo("[Параметры боя]"));
+                replies["battle"].replies.Add("guardme", "Защищай меня");
+                replies["battle"].replies.Add("nelez", "Не лезь в драку");
+                replies["battle"].replies.Add("attacklist", "Атакуй...");
+                replies["battle"].replies.Add("guardlist", "Защищай...");
+                replies["battle"].replies.Add("begin", "Назад");
+                replies.Add("move", new _dialoginfo("[Параметры движения]"));
+                replies["move"].replies.Add("move", "Следуй за мной");
+                replies["move"].replies.Add("stay", "Стой здесь");
+                replies["move"].replies.Add("followlist", "Следуй за...");
+                replies["move"].replies.Add("begin", "Назад");
+                replies.Add("end", new _dialoginfo("[Диалог завершен]"));
             }
-            if (pers1 == null || pers2 == null || replies == null)
+            if (replies == null)
             { MessageBox.Show("Нет данных для разговора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Asterisk); this.iserror = true; return; }
             if (!pers2.id.StartsWith("user.") && !pers2.id.StartsWith("npc."))
             { MessageBox.Show("Говорить можно только с игроками и NPC", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Asterisk); this.iserror = true; return; }
@@ -84,7 +87,7 @@ namespace DragonAmulet_Demo
         /// </summary>
         /// <param name="pers1">Игрок-отправитель</param>
         /// <param name="pers2">Игрок-приемник</param>
-        public dialogForm(ref _player pers1, ref _player pers2)
+        public speakForm(ref _player pers1, ref _player pers2)
         {
             this.iserror = false;
             if (pers1 == null || pers2 == null)
@@ -151,7 +154,8 @@ namespace DragonAmulet_Demo
             tb_History.Clear();
             clist_DialogVariants.Items.Clear();
             btn_End.Enabled = true; btn_Say.Enabled = false;
-            throw new NotImplementedException("dialogForm -> createOwnerDialog");
+            //throw new NotImplementedException("dialogForm -> createOwnerDialog");
+            speakNext();
         }
 
         #endregion
@@ -194,7 +198,7 @@ namespace DragonAmulet_Demo
             }
 
             clist_DialogVariants.Items.Clear();
-            // Проверяем реплики-ключи
+            // Если не ответил - проверяем реплики-ключи
             if(_state == DialogState.Ownerdialog)
             {
                 speakOwner();
@@ -631,6 +635,79 @@ namespace DragonAmulet_Demo
         /// </summary>
         private void speakOwner()
         {
+            //this.npcreplies.Add("begin", new _dialoginfo("[Диалог с вашим животным]"));
+            //this.npcreplies["begin"].replies.Add("battle", "Насчет боя...");
+            //this.npcreplies["begin"].replies.Add("move", "Насчет движения...");
+            //this.npcreplies["begin"].replies.Add("lask", "Приласкать");
+            //this.npcreplies["begin"].replies.Add("info", "Состояние");
+            //this.npcreplies["begin"].replies.Add("end", "Закончить диалог");
+            //this.npcreplies.Add("battle", new _dialoginfo("[Параметры боя]"));
+            //this.npcreplies["battle"].replies.Add("guardme", "Защищай меня");
+            //this.npcreplies["battle"].replies.Add("nelez", "Не лезь в драку");
+            //this.npcreplies["battle"].replies.Add("attacklist", "Атакуй...");
+            //this.npcreplies["battle"].replies.Add("guardlist", "Защищай...");
+            //this.npcreplies["battle"].replies.Add("begin", "Назад");
+            //this.npcreplies.Add("move", new _dialoginfo("[Параметры движения]"));
+            //this.npcreplies["move"].replies.Add("move", "Следуй за мной");
+            //this.npcreplies["move"].replies.Add("stay", "Стой здесь");
+            //this.npcreplies["move"].replies.Add("followlist", "Следуй за...");
+            //this.npcreplies["move"].replies.Add("begin", "Назад");
+            //this.npcreplies.Add("end", new _dialoginfo("[Диалог завершен]"));
+
+            if (_currentrepl == "lask")
+            {
+                
+            }
+            else if (_currentrepl == "info")
+            {
+                
+            }
+            else if (_currentrepl == "guardme")
+            {
+                
+            }
+            else if (_currentrepl == "nelez")
+            {
+                
+            }
+            else if (_currentrepl == "attacklist")
+            {
+                
+            }
+            else if (_currentrepl == "guardlist")
+            {
+                
+            }
+            else if (_currentrepl == "move")
+            {
+                
+            }
+            else if (_currentrepl == "stay")
+            {
+                
+            }
+            else if (_currentrepl == "followlist")
+            {
+                
+            }
+            else // Если реплика не ключевая - выводим в обычном режиме
+            {
+                if (!npcreplies.ContainsKey(_currentrepl))
+                { throw new Exception("dialogForm -> speakNext: error_#"); }
+
+                tb_History.AppendText(String.Format("{0}: {1}\r\n", person2.Title, npcreplies[_currentrepl].Title.Replace("<name>", person1.Title)));
+                for (int i = 0; i < npcreplies[_currentrepl].replies.Count; i++)
+                    clist_DialogVariants.Items.Add(npcreplies[_currentrepl].replies.ElementAt(i).Value);
+            }
+        }
+
+        /// <summary>
+        /// Диалог с питомцем
+        /// Часть: обработка ответа
+        /// </summary>
+        /// <param name="to">id реплики из списка команд</param>
+        private void eventOwner(int to)
+        {
             this.npcreplies.Add("begin", new _dialoginfo("[Диалог с вашим животным]"));
             this.npcreplies["begin"].replies.Add("battle", "Насчет боя...");
             this.npcreplies["begin"].replies.Add("move", "Насчет движения...");
@@ -649,18 +726,6 @@ namespace DragonAmulet_Demo
             this.npcreplies["move"].replies.Add("followlist", "Следуй за...");
             this.npcreplies["move"].replies.Add("begin", "Назад");
             this.npcreplies.Add("end", new _dialoginfo("[Диалог завершен]"));
-            /////////////////////////////////////////////
-
-        }
-
-        /// <summary>
-        /// Диалог с питомцем
-        /// Часть: обработка ответа
-        /// </summary>
-        /// <param name="to">id реплики из списка команд</param>
-        private void eventOwner(int to)
-        {
-            
         }
 
         /// <summary>

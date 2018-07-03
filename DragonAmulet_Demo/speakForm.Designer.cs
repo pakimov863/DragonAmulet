@@ -1,6 +1,6 @@
 ﻿namespace DragonAmulet_Demo
 {
-    partial class dialogForm
+    partial class speakForm
     {
         /// <summary>
         /// Required designer variable.
@@ -109,14 +109,14 @@
             this.lbl_DialogWith.TabIndex = 0;
             this.lbl_DialogWith.Text = "Диалог с:";
             // 
-            // dialogForm
+            // speakForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(468, 311);
             this.Controls.Add(this.pan_NpcDialog);
-            this.Name = "dialogForm";
-            this.Text = "dialogForm";
+            this.Name = "speakForm";
+            this.Text = "speakForm";
             this.pan_NpcDialog.ResumeLayout(false);
             this.pan_NpcDialog.PerformLayout();
             this.ResumeLayout(false);
